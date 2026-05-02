@@ -1,0 +1,22 @@
+:root {
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  color: #e2e8f0;
+  background: #020617;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  margin: 0;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  overscroll-behavior: none;
+}
