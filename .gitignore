@@ -8,6 +8,8 @@ dist/
 !.env.example
 
 test-results/
+*-dev.log
+*-dev.err.log
 client/src/**/*.js
 client/src/**/*.d.ts
 !client/src/env.d.ts
