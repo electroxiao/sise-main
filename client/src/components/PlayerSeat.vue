@@ -18,9 +18,21 @@
       </header>
       <div class="meld-row" :class="{ empty: !groups.length }">
         <template v-if="groups.length">
-          <div v-for="group in groups" :key="group.id" class="meld" :class="group.tone">
-            <em v-if="group.badge">{{ group.badge }}</em>
-            <FourColorCard v-for="card in group.cards" :key="card.id" :card="card" size="tiny" />
+          <div
+            v-for="group in groups"
+            :key="group.id"
+            class="meld fan-meld"
+            :class="group.tone"
+            :style="fanGroupStyle(group.cards.length)"
+          >
+            <span
+              v-for="(card, cardIndex) in group.cards"
+              :key="card.id"
+              class="fan-card"
+              :style="fanCardStyle(cardIndex, group.cards.length)"
+            >
+              <FourColorCard :card="card" size="tiny" />
+            </span>
           </div>
         </template>
       </div>
@@ -57,6 +69,27 @@ const avatarTone = computed(() => {
   const code = [...props.player.clientId].reduce((sum, ch) => sum + ch.charCodeAt(0), 0);
   return `tone-${(code % 4) + 1}`;
 });
+
+function fanCardStyle(index: number, total: number): Record<string, string> {
+  const center = (Math.max(total, 1) - 1) / 2;
+  const offset = index - center;
+  const maxSpread = total >= 5 ? 18.9 : total >= 4 ? 21.6 : 25.875;
+  const rotation = offset * maxSpread;
+
+  return {
+    "--tilt": `${rotation.toFixed(2)}deg`,
+    "--fan-z": `${index + 1}`,
+  };
+}
+
+function fanGroupStyle(total: number): Record<string, string> {
+  const count = Math.max(total, 1);
+  const width = 1.35 + Math.max(count - 1, 0) * 0.34;
+
+  return {
+    "--fan-width": `${width.toFixed(2)}rem`,
+  };
+}
 </script>
 
 <style scoped>
@@ -189,7 +222,7 @@ const avatarTone = computed(() => {
   left: 0;
   top: calc(var(--opponent-avatar-w) * 0.9);
   z-index: 3;
-  width: min(42vw, 31rem);
+  width: clamp(10rem, calc(42vw - 6.25rem), 24.75rem);
   transform: none;
 }
 
@@ -198,7 +231,7 @@ const avatarTone = computed(() => {
   right: 0;
   top: calc(var(--opponent-avatar-w) * 0.9);
   z-index: 3;
-  width: min(42vw, 31rem);
+  width: clamp(10rem, calc(42vw - 6.25rem), 24.75rem);
   transform: none;
 }
 
@@ -367,9 +400,17 @@ header span {
   justify-content: flex-start;
   align-content: flex-start;
   min-height: 0;
-  max-width: min(45vw, 32rem);
   margin-top: 0.42rem;
   overflow: visible;
+}
+
+.top .meld-row {
+  max-width: min(45vw, 32rem);
+}
+
+.left .meld-row,
+.right .meld-row {
+  max-width: 100%;
 }
 
 .right .meld-row {
@@ -379,34 +420,33 @@ header span {
 .top .meld-row,
 .left .meld-row,
 .right .meld-row {
-  gap: 0.28rem;
+  gap: 0.56rem;
 }
 
 .meld {
   position: relative;
-  display: flex;
-  align-items: end;
-  gap: 0.12rem;
-  padding: 0.25rem;
+  width: var(--fan-width, 1.35rem);
+  height: 3.55rem;
+  flex: 0 0 auto;
+  padding: 0.3rem 0.26rem 0.18rem;
   border-radius: 0.35rem;
-  background: rgba(37, 31, 25, 0.18);
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.26), transparent 64%),
+    rgba(37, 31, 25, 0.08);
 }
 
-.meld em {
+.fan-card {
   position: absolute;
-  left: -0.35rem;
-  top: -0.35rem;
-  z-index: 2;
-  min-width: 1.35rem;
-  min-height: 1.35rem;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  color: #fff3cc;
-  background: #1f2933;
-  font-size: 0.68rem;
-  font-style: normal;
-  font-weight: 900;
+  left: 50%;
+  bottom: 0.18rem;
+  z-index: var(--fan-z);
+  display: block;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+}
+
+.fan-card :deep(.fc-card) {
+  transform-origin: 50% 100%;
 }
 
 .active .portrait,
@@ -474,13 +514,13 @@ header span {
   .left .seat-panel {
     left: 0;
     top: calc(var(--opponent-avatar-w) * 0.9);
-    width: min(42vw, 24rem);
+    width: clamp(8.5rem, calc(42vw - 6.25rem), 17.75rem);
   }
 
   .right .seat-panel {
     right: 0;
     top: calc(var(--opponent-avatar-w) * 0.9);
-    width: min(42vw, 24rem);
+    width: clamp(8.5rem, calc(42vw - 6.25rem), 17.75rem);
   }
 
   .seat-panel {

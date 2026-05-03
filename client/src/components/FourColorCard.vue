@@ -8,14 +8,13 @@
         playable,
         selected,
         disabled,
+        'stretched-face': stretchedFace,
         response: card?.isResponseCard,
       },
     ]"
     :title="card ? getCardLabelText(card) : '牌背'"
   >
-    <template v-if="back">
-      <span class="back-mark"></span>
-    </template>
+    <template v-if="back"></template>
     <template v-else-if="card">
       <span class="face top">{{ face }}</span>
       <span class="face bottom">{{ face }}</span>
@@ -36,6 +35,7 @@ const props = withDefaults(
     playable?: boolean;
     selected?: boolean;
     disabled?: boolean;
+    stretchedFace?: boolean;
   }>(),
   {
     card: null,
@@ -44,6 +44,7 @@ const props = withDefaults(
     playable: false,
     selected: false,
     disabled: false,
+    stretchedFace: false,
   },
 );
 
@@ -120,6 +121,14 @@ const colorClass = computed(() => `tone-${props.card?.color ?? "white"}`);
   transform: translateY(0.22em) rotate(180deg);
 }
 
+.stretched-face .top {
+  transform: translateY(-0.22em) scaleY(1.25);
+}
+
+.stretched-face .bottom {
+  transform: translateY(0.22em) rotate(180deg) scaleY(1.25);
+}
+
 .tone-red {
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.4), transparent 32%, rgba(30, 0, 0, 0.1)),
@@ -157,14 +166,6 @@ const colorClass = computed(() => `tone-${props.card?.color ?? "white"}`);
     radial-gradient(circle at 35% 20%, rgba(255, 245, 198, 0.18), transparent 28%),
     repeating-linear-gradient(115deg, rgba(255, 255, 255, 0.12) 0 3px, transparent 3px 9px),
     linear-gradient(180deg, #6ea04f, #385f32);
-}
-
-.back-mark {
-  width: 58%;
-  height: 72%;
-  border: 1px solid rgba(255, 245, 210, 0.34);
-  border-radius: 0.25rem;
-  box-shadow: inset 0 0 0 2px rgba(20, 40, 19, 0.22);
 }
 
 .playable {

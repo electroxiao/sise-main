@@ -4,9 +4,20 @@
     </div>
     <div class="self-play">
       <div class="self-melds" :class="{ empty: !groups.length }">
-        <div v-for="group in groups" :key="group.id" class="self-meld">
-          <em v-if="group.badge">{{ group.badge }}</em>
-          <FourColorCard v-for="card in group.cards" :key="card.id" :card="card" size="sm" />
+        <div
+          v-for="group in groups"
+          :key="group.id"
+          class="self-meld fan-meld"
+          :style="fanGroupStyle(group.cards.length)"
+        >
+          <span
+            v-for="(card, cardIndex) in group.cards"
+            :key="card.id"
+            class="fan-card"
+            :style="fanCardStyle(cardIndex, group.cards.length)"
+          >
+            <FourColorCard :card="card" size="sm" />
+          </span>
         </div>
       </div>
       <div class="hand-row">
@@ -26,6 +37,7 @@
             :playable="canDiscardCard(card)"
             :disabled="canDiscard && !canDiscardCard(card)"
             :selected="isSelectedCandidateCard(card.id)"
+            stretched-face
           />
         </button>
       </div>
@@ -81,6 +93,27 @@ function candidateBadgeText(cardId: string): string {
 
 function isSelectedCandidateCard(cardId: string): boolean {
   return Boolean(selectedCandidate.value?.cardIds.includes(cardId));
+}
+
+function fanCardStyle(index: number, total: number): Record<string, string> {
+  const center = (Math.max(total, 1) - 1) / 2;
+  const offset = index - center;
+  const maxSpread = total >= 5 ? 17.1 : total >= 4 ? 19.8 : 23.625;
+  const rotation = offset * maxSpread;
+
+  return {
+    "--tilt": `${rotation.toFixed(2)}deg`,
+    "--fan-z": `${index + 1}`,
+  };
+}
+
+function fanGroupStyle(total: number): Record<string, string> {
+  const count = Math.max(total, 1);
+  const width = 1.65 + Math.max(count - 1, 0) * 0.42;
+
+  return {
+    "--fan-width": `${width.toFixed(2)}rem`,
+  };
 }
 </script>
 
@@ -144,7 +177,7 @@ function isSelectedCandidateCard(cardId: string): boolean {
   min-height: 3.8rem;
   display: flex;
   align-items: end;
-  gap: 0.5rem;
+  gap: 1rem;
   padding: 0.18rem 0.65rem;
   border: 0;
   border-radius: 0;
@@ -159,15 +192,29 @@ function isSelectedCandidateCard(cardId: string): boolean {
 .self-meld {
   position: relative;
   flex: 0 0 auto;
-  display: flex;
-  align-items: end;
-  gap: 0.14rem;
-  padding: 0.25rem 0.32rem;
+  width: var(--fan-width, 1.65rem);
+  height: 4.25rem;
+  padding: 0.34rem 0.36rem 0.2rem;
   border-radius: 0.42rem;
-  background: rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.28), transparent 64%),
+    rgba(255, 255, 255, 0.06);
 }
 
-.self-meld em,
+.fan-card {
+  position: absolute;
+  left: 50%;
+  bottom: 0.2rem;
+  z-index: var(--fan-z);
+  display: block;
+  transform: translateX(-50%);
+  transform-origin: 50% 100%;
+}
+
+.fan-card :deep(.fc-card) {
+  transform-origin: 50% 100%;
+}
+
 .candidate-badge {
   position: absolute;
   z-index: 2;
@@ -181,11 +228,6 @@ function isSelectedCandidateCard(cardId: string): boolean {
   font-size: 0.68rem;
   font-style: normal;
   font-weight: 900;
-}
-
-.self-meld em {
-  left: -0.38rem;
-  top: -0.38rem;
 }
 
 .hand-row {

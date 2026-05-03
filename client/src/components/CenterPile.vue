@@ -9,7 +9,7 @@
       </div>
       <div class="response-slot">
         <p>{{ responseLabel }}</p>
-        <FourColorCard v-if="responseCard" :card="responseCard" size="lg" />
+        <FourColorCard v-if="responseCard" :card="responseCard" size="xl" stretched-face />
         <div v-else class="empty-card">待</div>
       </div>
     </div>
