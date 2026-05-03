@@ -5,13 +5,13 @@
       <span>{{ turnHint }}</span>
     </div>
     <div class="pile-row">
-      <div class="deck-cluster" :title="`牌堆剩余 ${deckCount} 张`">
+      <div class="deck-cluster" data-flight-anchor="deck" :title="`牌堆剩余 ${deckCount} 张`">
         <div class="deck-backs">
           <FourColorCard v-for="index in 5" :key="index" back size="sm" />
         </div>
         <strong>{{ deckCount }}</strong>
       </div>
-      <div class="response-slot">
+      <div class="response-slot" data-flight-anchor="response">
         <p>{{ responseLabel }}</p>
         <FourColorCard v-if="responseCard" :card="responseCard" size="xl" stretched-face />
         <div v-else class="empty-card">待</div>

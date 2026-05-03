@@ -1,7 +1,12 @@
 <template>
-  <section class="player-seat" :class="[position, { active: isActive, dealer: isDealer, responder: isResponder }]">
+  <section
+    class="player-seat"
+    :class="[position, { active: isActive, dealer: isDealer, responder: isResponder }]"
+    :data-player-id="player.clientId"
+  >
     <div class="portrait" :class="avatarTone">
-      <span>{{ portraitText }}</span>
+      <span v-if="isActive" class="turn-arrow" aria-hidden="true"></span>
+      <span class="portrait-name">{{ portraitText }}</span>
       <i v-if="isDealer">庄</i>
     </div>
     <div class="hand-count">
@@ -16,13 +21,15 @@
         <span v-if="player.isBot">BOT</span>
         <span v-else-if="!player.connected">托管</span>
       </header>
-      <div class="meld-row" :class="{ empty: !groups.length }">
+      <div class="meld-row" :class="{ empty: !groups.length }" :data-meld-anchor="player.clientId">
         <template v-if="groups.length">
           <div
             v-for="group in groups"
             :key="group.id"
             class="meld fan-meld"
             :class="group.tone"
+            :data-meld-group-anchor="player.clientId"
+            :data-meld-card-ids="groupCardIds(group)"
             :style="fanGroupStyle(group.cards.length)"
           >
             <span
@@ -90,6 +97,10 @@ function fanGroupStyle(total: number): Record<string, string> {
     "--fan-width": `${width.toFixed(2)}rem`,
   };
 }
+
+function groupCardIds(group: VisibleGroupBlock): string {
+  return group.cards.map((card) => card.id).join("|");
+}
 </script>
 
 <style scoped>
@@ -101,6 +112,10 @@ function fanGroupStyle(total: number): Record<string, string> {
   grid-template-columns: auto minmax(10rem, 16rem);
   align-items: center;
   gap: 0.55rem;
+}
+
+.player-seat.active {
+  z-index: 60;
 }
 
 .top {
@@ -149,7 +164,7 @@ function fanGroupStyle(total: number): Record<string, string> {
   overflow: visible;
 }
 
-.portrait span {
+.portrait-name {
   position: absolute;
   left: -0.35rem;
   right: -0.35rem;
@@ -183,6 +198,66 @@ function fanGroupStyle(total: number): Record<string, string> {
   box-shadow: 0 0 0 2px #2d160f;
 }
 
+.turn-arrow {
+  position: absolute;
+  z-index: 80;
+  width: 4.7rem;
+  height: 4.7rem;
+  display: grid;
+  place-items: center;
+  color: #28d84d;
+  font-family: "Arial Black", "Microsoft YaHei", sans-serif;
+  font-size: 4.2rem;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow:
+    -2px -2px 0 #111,
+    0 -2px 0 #111,
+    2px -2px 0 #111,
+    -2px 0 0 #111,
+    2px 0 0 #111,
+    -2px 2px 0 #111,
+    0 2px 0 #111,
+    2px 2px 0 #111,
+    0 0.22rem 0.14rem rgba(0, 0, 0, 0.42);
+  -webkit-text-stroke: 2.4px #111;
+  pointer-events: none;
+}
+
+.turn-arrow::before {
+  display: block;
+}
+
+.top .turn-arrow {
+  left: 50%;
+  top: calc(100% + 0.46rem);
+  animation: turn-arrow-top 0.72s ease-in-out infinite;
+}
+
+.top .turn-arrow::before {
+  content: "⬆";
+}
+
+.left .turn-arrow {
+  left: calc(100% + 0.54rem);
+  top: 50%;
+  animation: turn-arrow-left 0.72s ease-in-out infinite;
+}
+
+.left .turn-arrow::before {
+  content: "⬅";
+}
+
+.right .turn-arrow {
+  right: calc(100% + 0.54rem);
+  top: 50%;
+  animation: turn-arrow-right 0.72s ease-in-out infinite;
+}
+
+.right .turn-arrow::before {
+  content: "➡";
+}
+
 .tone-2::before {
   background: #5e3d25;
 }
@@ -210,7 +285,7 @@ function fanGroupStyle(total: number): Record<string, string> {
   position: absolute;
   left: calc(50% + var(--opponent-avatar-w) / 2 + clamp(0.5rem, 1vw, 0.9rem));
   top: calc(var(--opponent-avatar-w) * 0.08);
-  width: clamp(9.5rem, 17vw, 15.5rem);
+  width: clamp(19rem, 34vw, 31rem);
   max-height: clamp(5.2rem, 21vh, 9.2rem);
   overflow: auto;
   pointer-events: auto;
@@ -220,7 +295,7 @@ function fanGroupStyle(total: number): Record<string, string> {
 .left .seat-panel {
   position: absolute;
   left: 0;
-  top: calc(var(--opponent-avatar-w) * 0.9);
+  top: calc(var(--opponent-avatar-w) * 1.24);
   z-index: 3;
   width: clamp(10rem, calc(42vw - 6.25rem), 24.75rem);
   transform: none;
@@ -229,22 +304,22 @@ function fanGroupStyle(total: number): Record<string, string> {
 .right .seat-panel {
   position: absolute;
   right: 0;
-  top: calc(var(--opponent-avatar-w) * 0.9);
+  top: calc(var(--opponent-avatar-w) * 1.24);
   z-index: 3;
   width: clamp(10rem, calc(42vw - 6.25rem), 24.75rem);
   transform: none;
 }
 
-.top .portrait span,
-.left .portrait span,
-.right .portrait span {
+.top .portrait-name,
+.left .portrait-name,
+.right .portrait-name {
   min-height: 2.25rem;
   font-size: clamp(1.05rem, 1.8vw, 1.45rem);
 }
 
-.top .portrait span,
-.left .portrait span,
-.right .portrait span {
+.top .portrait-name,
+.left .portrait-name,
+.right .portrait-name {
   display: none;
 }
 
@@ -270,7 +345,7 @@ function fanGroupStyle(total: number): Record<string, string> {
 }
 
 .top .seat-panel {
-  width: clamp(9.5rem, 17vw, 15.5rem);
+  width: clamp(19rem, 34vw, 31rem);
   max-height: none;
   overflow: visible;
 }
@@ -322,25 +397,25 @@ header span {
   position: absolute;
   width: max-content;
   justify-content: flex-start;
-  margin-top: 0.2rem;
+  margin-top: 0;
   gap: 0.38rem;
 }
 
 .top .hand-count {
   right: calc(50% + var(--opponent-avatar-w) / 2 + clamp(0.55rem, 1vw, 0.9rem));
-  top: calc(var(--opponent-avatar-w) * 0.08);
+  top: 0;
   margin-right: 0;
 }
 
 .left .hand-count {
   left: calc(var(--opponent-avatar-w) + 0.7rem);
-  top: calc(var(--opponent-avatar-w) * 0.28);
+  top: 0;
   margin-left: 0;
 }
 
 .right .hand-count {
   right: calc(var(--opponent-avatar-w) + 0.7rem);
-  top: calc(var(--opponent-avatar-w) * 0.28);
+  top: 0;
   margin-left: 0;
   flex-direction: row-reverse;
   justify-content: flex-start;
@@ -405,7 +480,7 @@ header span {
 }
 
 .top .meld-row {
-  max-width: min(45vw, 32rem);
+  max-width: min(90vw, 64rem);
 }
 
 .left .meld-row,
@@ -465,6 +540,39 @@ header span {
   border-color: #8d5e18;
 }
 
+@keyframes turn-arrow-top {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(0.38rem);
+  }
+}
+
+@keyframes turn-arrow-left {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-50%) translateX(0.38rem);
+  }
+}
+
+@keyframes turn-arrow-right {
+  0%,
+  100% {
+    transform: translateY(-50%) translateX(0);
+  }
+
+  50% {
+    transform: translateY(-50%) translateX(-0.38rem);
+  }
+}
+
 @media (max-width: 960px) {
   .player-seat {
     --opponent-avatar-w: clamp(5.8rem, min(12vw, 18vh), 7.5rem);
@@ -510,20 +618,20 @@ header span {
 
   .top .seat-panel {
     left: calc(50% + var(--opponent-avatar-w) / 2 + 0.45rem);
-    width: clamp(8.5rem, 19vw, 12rem);
+    width: clamp(17rem, 38vw, 24rem);
     top: calc(var(--opponent-avatar-w) * 0.08);
     max-height: none;
   }
 
   .left .seat-panel {
     left: 0;
-    top: calc(var(--opponent-avatar-w) * 0.9);
+    top: calc(var(--opponent-avatar-w) * 1.24);
     width: clamp(8.5rem, calc(42vw - 6.25rem), 17.75rem);
   }
 
   .right .seat-panel {
     right: 0;
-    top: calc(var(--opponent-avatar-w) * 0.9);
+    top: calc(var(--opponent-avatar-w) * 1.24);
     width: clamp(8.5rem, calc(42vw - 6.25rem), 17.75rem);
   }
 

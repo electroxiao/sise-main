@@ -1,13 +1,16 @@
 <template>
-  <section class="self-hand-shell">
+  <section class="self-hand-shell" :class="{ active: isActive }" :data-player-id="player?.clientId || ''">
     <div class="self-portrait" :class="{ active: isActive, dealer: isDealer }">
+      <span v-if="isActive" class="self-turn-arrow" aria-hidden="true"></span>
     </div>
     <div class="self-play">
-      <div class="self-melds" :class="{ empty: !groups.length }">
+      <div class="self-melds" :class="{ empty: !groups.length }" :data-meld-anchor="player?.clientId || ''">
         <div
           v-for="group in groups"
           :key="group.id"
           class="self-meld fan-meld"
+          :data-meld-group-anchor="player?.clientId || ''"
+          :data-meld-card-ids="groupCardIds(group)"
           :style="fanGroupStyle(group.cards.length)"
         >
           <span
@@ -25,6 +28,7 @@
           v-for="(card, index) in privateHand"
           :key="card.id"
           :data-testid="`hand-card-${card.id}`"
+          :data-card-id="card.id"
           class="hand-button"
           :style="{ '--tilt': `${(index % 5) - 2}deg` }"
           :disabled="!canDiscardCard(card)"
@@ -115,6 +119,10 @@ function fanGroupStyle(total: number): Record<string, string> {
     "--fan-width": `${width.toFixed(2)}rem`,
   };
 }
+
+function groupCardIds(group: VisibleGroupBlock): string {
+  return group.cards.map((card) => card.id).join("|");
+}
 </script>
 
 <style scoped>
@@ -130,6 +138,10 @@ function fanGroupStyle(total: number): Record<string, string> {
   gap: clamp(0.65rem, 1.2vw, 1rem);
 }
 
+.self-hand-shell.active {
+  z-index: 60;
+}
+
 .self-portrait {
   position: relative;
   aspect-ratio: 0.9;
@@ -141,7 +153,7 @@ function fanGroupStyle(total: number): Record<string, string> {
   background:
     linear-gradient(180deg, #e9f4e5 0%, #bcd9ad 56%, #5a8b57 57%);
   box-shadow: 0 0.5rem 0 #3c2c1b, 0 0.9rem 1.5rem rgba(0, 0, 0, 0.42);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .self-portrait.active {
@@ -165,6 +177,40 @@ function fanGroupStyle(total: number): Record<string, string> {
   background: #c93622;
   font-weight: 900;
   box-shadow: 0 0 0 2px #2d160f;
+}
+
+.self-turn-arrow {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.48rem);
+  z-index: 80;
+  width: 4.9rem;
+  height: 4.9rem;
+  display: grid;
+  place-items: center;
+  color: #28d84d;
+  font-family: "Arial Black", "Microsoft YaHei", sans-serif;
+  font-size: 4.36rem;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow:
+    -2px -2px 0 #111,
+    0 -2px 0 #111,
+    2px -2px 0 #111,
+    -2px 0 0 #111,
+    2px 0 0 #111,
+    -2px 2px 0 #111,
+    0 2px 0 #111,
+    2px 2px 0 #111,
+    0 0.22rem 0.14rem rgba(0, 0, 0, 0.42);
+  -webkit-text-stroke: 2.4px #111;
+  pointer-events: none;
+  animation: self-turn-arrow-bounce 0.72s ease-in-out infinite;
+}
+
+.self-turn-arrow::before {
+  content: "⬇";
+  display: block;
 }
 
 .self-play {
@@ -264,6 +310,17 @@ function fanGroupStyle(total: number): Record<string, string> {
 .candidate-badge {
   right: -0.26rem;
   top: -0.3rem;
+}
+
+@keyframes self-turn-arrow-bounce {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-0.38rem);
+  }
 }
 
 @media (max-width: 960px) {
