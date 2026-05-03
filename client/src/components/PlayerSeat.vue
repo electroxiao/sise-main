@@ -111,19 +111,9 @@ const avatarTone = computed(() => {
   place-items: center;
   color: #21160f;
   background:
-    radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.7), transparent 19%),
     linear-gradient(180deg, #f4ead6, #d5b98c);
   box-shadow: 0 0.5rem 0 #3c2c1b, 0 0.9rem 1.4rem rgba(0, 0, 0, 0.38);
   overflow: visible;
-}
-
-.portrait::before {
-  content: "";
-  position: absolute;
-  inset: 0.55rem 0.75rem 2.1rem;
-  border-radius: 46% 46% 42% 42%;
-  background: rgba(38, 33, 28, 0.88);
-  box-shadow: 0 1.55rem 0 0 #f1c7a8;
 }
 
 .portrait span {
@@ -196,27 +186,20 @@ const avatarTone = computed(() => {
 
 .left .seat-panel {
   position: absolute;
-  left: calc(var(--opponent-avatar-w) * 0.72);
-  top: calc(var(--opponent-avatar-w) * 0.62);
+  left: 0;
+  top: calc(var(--opponent-avatar-w) * 0.9);
   z-index: 3;
-  width: max-content;
-  max-width: min(45vw, 32rem);
+  width: min(42vw, 31rem);
+  transform: none;
 }
 
 .right .seat-panel {
   position: absolute;
-  right: calc(var(--opponent-avatar-w) * 0.72);
-  top: calc(var(--opponent-avatar-w) * 0.62);
+  right: 0;
+  top: calc(var(--opponent-avatar-w) * 0.9);
   z-index: 3;
-  width: max-content;
-  max-width: min(45vw, 32rem);
-}
-
-.top .portrait::before,
-.left .portrait::before,
-.right .portrait::before {
-  inset: 0.8rem 1rem 2.75rem;
-  box-shadow: 0 2.15rem 0 0 #f1c7a8;
+  width: min(42vw, 31rem);
+  transform: none;
 }
 
 .top .portrait span,
@@ -224,6 +207,12 @@ const avatarTone = computed(() => {
 .right .portrait span {
   min-height: 2.25rem;
   font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+}
+
+.top .portrait span,
+.left .portrait span,
+.right .portrait span {
+  display: none;
 }
 
 .seat-panel {
@@ -311,13 +300,13 @@ header span {
 }
 
 .left .hand-count {
-  left: calc(var(--opponent-avatar-w) * 0.8);
+  left: calc(var(--opponent-avatar-w) + 0.7rem);
   top: calc(var(--opponent-avatar-w) * 0.28);
   margin-left: 0;
 }
 
 .right .hand-count {
-  right: calc(var(--opponent-avatar-w) * 0.8);
+  right: calc(var(--opponent-avatar-w) + 0.7rem);
   top: calc(var(--opponent-avatar-w) * 0.28);
   margin-left: 0;
   flex-direction: row-reverse;
@@ -483,15 +472,15 @@ header span {
   }
 
   .left .seat-panel {
-    left: calc(var(--opponent-avatar-w) * 0.74);
-    top: calc(var(--opponent-avatar-w) * 0.62);
-    max-width: min(45vw, 24rem);
+    left: 0;
+    top: calc(var(--opponent-avatar-w) * 0.9);
+    width: min(42vw, 24rem);
   }
 
   .right .seat-panel {
-    right: calc(var(--opponent-avatar-w) * 0.74);
-    top: calc(var(--opponent-avatar-w) * 0.62);
-    max-width: min(45vw, 24rem);
+    right: 0;
+    top: calc(var(--opponent-avatar-w) * 0.9);
+    width: min(42vw, 24rem);
   }
 
   .seat-panel {

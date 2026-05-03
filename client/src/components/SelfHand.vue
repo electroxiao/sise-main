@@ -1,7 +1,6 @@
 <template>
   <section class="self-hand-shell">
     <div class="self-portrait" :class="{ active: isActive, dealer: isDealer }">
-      <span>{{ portraitText }}</span>
     </div>
     <div class="self-play">
       <div class="self-melds" :class="{ empty: !groups.length }">
@@ -65,7 +64,6 @@ const emit = defineEmits<{
   discardCard: [cardId: string];
 }>();
 
-const portraitText = computed(() => (props.player?.name ?? "自己").replace(/\s*\[BOT\]\s*$/, "").slice(0, 2) || "己");
 const selectedCandidate = computed(
   () => props.activeCandidates.find((candidate) => candidate.id === props.selectedCandidateId) ?? null,
 );
@@ -108,33 +106,9 @@ function isSelectedCandidateCard(cardId: string): boolean {
   place-items: end center;
   color: #142516;
   background:
-    radial-gradient(circle at 50% 30%, #f0c7a9 0 22%, transparent 23%),
     linear-gradient(180deg, #e9f4e5 0%, #bcd9ad 56%, #5a8b57 57%);
   box-shadow: 0 0.5rem 0 #3c2c1b, 0 0.9rem 1.5rem rgba(0, 0, 0, 0.42);
   overflow: hidden;
-}
-
-.self-portrait::before {
-  content: "";
-  position: absolute;
-  left: 29%;
-  top: 15%;
-  width: 42%;
-  height: 26%;
-  border-radius: 44% 44% 35% 35%;
-  background: #1e1b17;
-}
-
-.self-portrait span {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  min-height: 1.9rem;
-  display: grid;
-  place-items: center;
-  border-top: 2px solid rgba(22, 17, 14, 0.48);
-  background: rgba(255, 246, 226, 0.94);
-  font-weight: 900;
 }
 
 .self-portrait.active {

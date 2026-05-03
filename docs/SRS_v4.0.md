@@ -353,9 +353,9 @@ private sendHandToClient(client: Client, hand: Card[]) {
 ### 7.2 前端组件清单
 | 组件 | 职责 | 依赖 |
 |------|------|------|
-| `GameBoard.vue` | 主游戏区域（待响区/弃牌区/明示区布局） | Colyseus State |
-| `ActionPanel.vue` | 操作面板（动态按钮） | `availableActions` |
-| `Card.vue` | 单张牌渲染（样式/高亮） | `isResponseCard` |
+| `GameTable.vue` | 当前主游戏桌面（对手座位/中心牌堆/操作 dock/自己的手牌） | Colyseus State |
+| `ActionDock.vue` | 操作面板（动态按钮） | `availableActions` |
+| `FourColorCard.vue` | 共享单张牌渲染（统一比例/样式/高亮） | `isResponseCard` |
 | `DiscardZone.vue` | 弃牌区（全公开显示） | `player.discardPile` |
 | `OrientationGuard.vue` | 横屏强制提示 | `window.orientation` |
 

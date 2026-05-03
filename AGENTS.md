@@ -57,8 +57,9 @@ npm run compose:down:dev
 - `server/src/schema/game-state.schema.ts`: public Colyseus room state.
 - `client/src/composables/useRoom.ts`: room connection, state subscription, local token handling, and room helper calls.
 - `client/src/App.vue`: top-level app flow, lobby, declarations, settlement, and rules modal.
-- `client/src/components/GameBoard.vue`: main table display.
-- `client/src/components/ActionPanel.vue`: action button presentation and submission.
+- `client/src/components/GameTable.vue`: current main table display, including opponents, center pile, action dock, and self hand.
+- `client/src/components/FourColorCard.vue`: shared card rendering; keep all card sizes on one aspect-ratio source.
+- `client/src/components/ActionDock.vue`: current action button presentation and submission surface.
 
 ## Gameplay Model Notes
 
@@ -90,6 +91,9 @@ npm run compose:down:dev
 - The UI is game-first, landscape-oriented, and touch-friendly. Keep important controls large enough for mobile taps.
 - Preserve the distinction between protocol actions and display language, especially `local_upper + pass` displayed as "抓".
 - Keep action availability visually clear: disabled options may remain visible, but executable actions must be obvious.
+- During `playing`, the table is the primary surface; do not reintroduce a top header that consumes table height.
+- Keep opponent hand counts and exposed meld rows as separate positioned layers. Hand counts should sit toward the table center and must not cover avatars; left/right meld rows should expand inward or wrap, never off-screen.
+- Keep avatars visually simple unless the design is changed intentionally: current opponent and self avatars are flat rectangular color blocks with no inner portrait shape or name strip.
 - When changing visual layout, verify both desktop and mobile landscape behavior.
 
 ## Git Hygiene

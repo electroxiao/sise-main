@@ -1,7 +1,7 @@
 ﻿<template>
   <OrientationGuard />
   <main class="layout" :class="{ playing: isPlaying, 'compact-landscape': isCompactLandscape && isPlaying }">
-    <header class="top">
+    <header v-if="!isPlaying" class="top">
       <div class="top-brand">
         <h1>四色牌</h1>
         <p class="top-slogan">象棋魂·麻将韵·纸牌趣——四色牌，一局见真章！</p>
@@ -1644,7 +1644,8 @@ watch(
 }
 
 .layout.playing {
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr);
+  gap: 0;
 }
 
 .layout.compact-landscape.playing {

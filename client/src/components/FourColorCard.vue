@@ -78,45 +78,46 @@ const colorClass = computed(() => `tone-${props.card?.color ?? "white"}`);
 
 .size-tiny {
   --card-w: 1.35rem;
-  font-size: 0.7rem;
+  font-size: 0.82rem;
 }
 
 .size-sm {
   --card-w: 1.65rem;
-  font-size: 0.82rem;
+  font-size: 1rem;
 }
 
 .size-md {
   --card-w: 2rem;
-  font-size: 1rem;
+  font-size: 1.18rem;
 }
 
 .size-lg {
   --card-w: 2.35rem;
-  font-size: 1.16rem;
+  font-size: 1.38rem;
 }
 
 .size-xl {
   --card-w: clamp(1.65rem, 3.3vw, 2.35rem);
-  font-size: clamp(1.12rem, 2.2vw, 1.55rem);
+  font-size: clamp(1.32rem, 2.5vw, 1.82rem);
 }
 
 .face {
   writing-mode: vertical-rl;
   font-family: "KaiTi", "STKaiti", "DFKai-SB", serif;
   font-weight: 900;
-  line-height: 0.95;
+  line-height: 0.9;
   letter-spacing: 0;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 .top {
-  align-self: end;
+  align-self: center;
+  transform: translateY(-0.22em);
 }
 
 .bottom {
-  align-self: start;
-  transform: rotate(180deg);
+  align-self: center;
+  transform: translateY(0.22em) rotate(180deg);
 }
 
 .tone-red {

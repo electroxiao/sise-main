@@ -126,12 +126,16 @@
   - 首页入口、模式选择、等待大厅。
   - 声明鱼/暗坎面板。
   - 结算面板和规则弹层。
+  - `playing` 阶段不显示顶部栏，桌面区域独占主视口。
 
-- `client/src/components/GameBoard.vue`
-  - 对局桌面、手牌、明示区、弃牌区、待响牌。
+- `client/src/components/GameTable.vue`
+  - 当前对局桌面入口，组合对手座位、中心牌堆/待响牌、操作 dock 和自己的手牌区。
 
-- `client/src/components/ActionPanel.vue`
-  - 动作按钮展示和提交。
+- `client/src/components/FourColorCard.vue`
+  - 共享牌面渲染。所有尺寸使用同一宽高比例源，避免底部手牌与其他区域牌型比例漂移。
+
+- `client/src/components/ActionDock.vue`
+  - 当前动作按钮展示和提交入口。
   - 注意：协议动作为 `pass`，在 `local_upper` 阶段界面显示为“抓”。
 
 ## 7. 服务端结构与职责

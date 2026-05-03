@@ -127,6 +127,7 @@ server/src/rooms/GameRoom.ts    # 房间入口与消息路由
 server/src/rooms/flow/          # 对局流程分层
 server/src/rules/               # 牌面、动作与胡牌算法
 server/src/schema/              # Colyseus 同步状态 Schema
+client/src/components/GameTable.vue # 当前对局桌面主组件
 tests/e2e/                      # 浏览器级回归测试
 docs/                           # 项目文档
 ```
