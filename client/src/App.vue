@@ -11,10 +11,6 @@
         <span>座位ID: {{ mySeatId || "-" }}</span>
         <span>房主: {{ state?.hostPlayerId || "-" }}</span>
         <span>庄家: {{ dealerName }}</span>
-        <div class="view-mode-toggle">
-          <button class="ghost mini" :class="{ active: tableCardMode === 'simple' }" @click="tableCardMode = 'simple'">简化大字</button>
-          <button class="ghost mini" :class="{ active: tableCardMode === 'full' }" @click="tableCardMode = 'full'">长条色牌</button>
-        </div>
         <button v-if="canReturnToLobby" class="ghost reset-btn" @click="returnLobby">返回大厅</button>
         <button v-else class="ghost reset-btn" @click="showRules = true">查看规则</button>
       </div>
@@ -64,7 +60,7 @@
     </section>
 
     <template v-else>
-      <GameBoard
+      <GameTable
         :state="state"
         :players="players"
         :private-hand="privateHand"
@@ -72,12 +68,9 @@
         :can-discard="canDiscard"
         :actions="availableActions"
         :can-act="canAct"
-        :is-current-turn="isMyTurn"
         :response-phase="state?.responsePhase || ''"
         :current-player-name="currentPlayerName"
         :turn-hint="turnHint"
-        :embedded-action-panel="isCompactLandscape"
-        :table-card-mode="tableCardMode"
         :selection-mode="selectionMode"
         :selected-candidate-id="selectedCandidateId"
         :active-candidates="activeCandidates"
@@ -86,19 +79,6 @@
         @selection-change="onPanelSelectionChange"
       />
     </template>
-
-    <ActionPanel
-      v-if="isPlaying && !isCompactLandscape"
-      :actions="availableActions"
-      :can-act="canAct"
-      :is-current-turn="isMyTurn"
-      :response-phase="state?.responsePhase || ''"
-      :current-player-name="currentPlayerName"
-      :selection-mode="selectionMode"
-      :selected-candidate-id="selectedCandidateId"
-      @submit="onPanelSubmit"
-      @selection-change="onPanelSelectionChange"
-    />
 
     <div v-if="isPlaying && selectionMode" class="candidate-mask">
       <div class="candidate-panel">
@@ -423,9 +403,8 @@
 
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from "vue";
-import ActionPanel from "@/components/ActionPanel.vue";
 import CardComp from "@/components/Card.vue";
-import GameBoard from "@/components/GameBoard.vue";
+import GameTable from "@/components/GameTable.vue";
 import LobbyPage from "@/components/LobbyPage.vue";
 import LoginPage from "@/components/LoginPage.vue";
 import OrientationGuard from "@/components/OrientationGuard.vue";
@@ -651,9 +630,6 @@ const candidatePromptText = computed(() => {
   return selectionMode.value ? `请点击一个牌组确认${actionText(selectionMode.value)}` : "请点击一个牌组确认";
 });
 const isCompactLandscape = ref(false);
-const tableCardMode = ref<"simple" | "full">(
-  (window.localStorage.getItem("sise_table_card_mode") as "simple" | "full" | null) ?? "simple",
-);
 const globalError = ref("");
 const showRules = ref(false);
 const updateCompactLandscape = () => {
@@ -1067,7 +1043,6 @@ onMounted(() => {
     nowMs.value = Date.now();
   }, 500);
   updateCompactLandscape();
-  window.localStorage.setItem("sise_table_card_mode", tableCardMode.value);
   window.addEventListener("resize", updateCompactLandscape);
   window.addEventListener("orientationchange", updateCompactLandscape);
 });
@@ -1079,10 +1054,6 @@ onUnmounted(() => {
   }
   window.removeEventListener("resize", updateCompactLandscape);
   window.removeEventListener("orientationchange", updateCompactLandscape);
-});
-
-watch(tableCardMode, (mode) => {
-  window.localStorage.setItem("sise_table_card_mode", mode);
 });
 
 function maybeAutoStartPractice() {
@@ -1658,11 +1629,6 @@ watch(
 
 .reset-btn {
   margin-left: 0.25rem;
-}
-
-.view-mode-toggle {
-  display: inline-flex;
-  gap: 0.25rem;
 }
 
 .ghost.mini {
