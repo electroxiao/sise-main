@@ -18,7 +18,6 @@
     </template>
     <template v-else-if="card">
       <span class="face top">{{ face }}</span>
-      <span class="stripe">{{ colorText }}</span>
       <span class="face bottom">{{ face }}</span>
     </template>
   </div>
@@ -27,7 +26,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import type { Card } from "@/types/game";
-import { getCardColorText, getCardFaceText, getCardLabelText } from "@/utils/cardText";
+import { getCardFaceText, getCardLabelText } from "@/utils/cardText";
 
 const props = withDefaults(
   defineProps<{
@@ -49,21 +48,20 @@ const props = withDefaults(
 );
 
 const face = computed(() => (props.card ? getCardFaceText(props.card) : ""));
-const colorText = computed(() => (props.card ? getCardColorText(props.card) || "金" : ""));
 const colorClass = computed(() => `tone-${props.card?.color ?? "white"}`);
 </script>
 
 <style scoped>
 .fc-card {
+  --card-ratio: 0.43 / 1;
   --card-w: 2.1rem;
-  --card-h: 4.9rem;
   position: relative;
   width: var(--card-w);
-  height: var(--card-h);
+  aspect-ratio: var(--card-ratio);
   border: 2px solid #14110d;
   border-radius: 0.34rem;
   display: grid;
-  grid-template-rows: 1fr auto 1fr;
+  grid-template-rows: 1fr 1fr;
   place-items: center;
   color: #1d120a;
   background:
@@ -80,32 +78,27 @@ const colorClass = computed(() => `tone-${props.card?.color ?? "white"}`);
 
 .size-tiny {
   --card-w: 1.35rem;
-  --card-h: 3.05rem;
   font-size: 0.7rem;
 }
 
 .size-sm {
   --card-w: 1.65rem;
-  --card-h: 3.7rem;
   font-size: 0.82rem;
 }
 
 .size-md {
   --card-w: 2rem;
-  --card-h: 4.55rem;
   font-size: 1rem;
 }
 
 .size-lg {
   --card-w: 2.35rem;
-  --card-h: 5.35rem;
   font-size: 1.16rem;
 }
 
 .size-xl {
-  --card-w: clamp(2rem, 4.1vw, 2.9rem);
-  --card-h: clamp(4.75rem, 9.5vw, 6.55rem);
-  font-size: clamp(1rem, 2vw, 1.38rem);
+  --card-w: clamp(1.65rem, 3.3vw, 2.35rem);
+  font-size: clamp(1.12rem, 2.2vw, 1.55rem);
 }
 
 .face {
@@ -124,19 +117,6 @@ const colorClass = computed(() => `tone-${props.card?.color ?? "white"}`);
 .bottom {
   align-self: start;
   transform: rotate(180deg);
-}
-
-.stripe {
-  width: 78%;
-  min-height: 1.1em;
-  border-radius: 999px;
-  display: grid;
-  place-items: center;
-  font-size: 0.58em;
-  font-weight: 900;
-  color: rgba(255, 250, 235, 0.92);
-  background: rgba(17, 24, 39, 0.78);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
 }
 
 .tone-red {
@@ -167,11 +147,6 @@ const colorClass = computed(() => `tone-${props.card?.color ?? "white"}`);
   background:
     linear-gradient(90deg, rgba(255, 255, 255, 0.36), transparent 32%, rgba(40, 0, 0, 0.16)),
     #d94b31;
-}
-
-.tone-gold .stripe {
-  background: #f6cf55;
-  color: #4a170d;
 }
 
 .is-back {

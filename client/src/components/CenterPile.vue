@@ -1,15 +1,17 @@
 <template>
   <section class="center-pile" :class="{ active: isActive }">
-    <div class="deck-cluster" :title="`牌堆剩余 ${deckCount} 张`">
-      <div class="deck-backs">
-        <FourColorCard v-for="index in 5" :key="index" back size="sm" />
+    <div class="pile-row">
+      <div class="deck-cluster" :title="`牌堆剩余 ${deckCount} 张`">
+        <div class="deck-backs">
+          <FourColorCard v-for="index in 5" :key="index" back size="sm" />
+        </div>
+        <strong>{{ deckCount }}</strong>
       </div>
-      <strong>{{ deckCount }}</strong>
-    </div>
-    <div class="response-slot">
-      <p>{{ responseLabel }}</p>
-      <FourColorCard v-if="responseCard" :card="responseCard" size="lg" />
-      <div v-else class="empty-card">待</div>
+      <div class="response-slot">
+        <p>{{ responseLabel }}</p>
+        <FourColorCard v-if="responseCard" :card="responseCard" size="lg" />
+        <div v-else class="empty-card">待</div>
+      </div>
     </div>
     <div class="turn-copy">
       <strong>{{ headline }}</strong>
@@ -66,27 +68,31 @@ const headline = computed(() => {
   left: 50%;
   top: 51%;
   z-index: 4;
-  width: min(22vw, 17rem);
-  min-width: 11rem;
+  width: max-content;
+  min-width: 0;
   transform: translate(-50%, -50%) perspective(900px) rotateX(9deg);
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
   justify-content: center;
   justify-items: center;
   align-items: center;
-  gap: 0.26rem;
-  padding: 0.45rem 0.78rem 0.58rem;
-  border: 2px solid rgba(18, 16, 13, 0.72);
-  border-radius: 1rem;
-  background: rgba(27, 30, 27, 0.66);
-  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.05), 0 1rem 2rem rgba(0, 0, 0, 0.28);
+  gap: 0.32rem;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .center-pile.active {
-  box-shadow:
-    inset 0 0 0 2px rgba(247, 205, 106, 0.18),
-    0 0 2.4rem rgba(247, 205, 106, 0.24),
-    0 1rem 2rem rgba(0, 0, 0, 0.28);
+  filter: drop-shadow(0 0 1.1rem rgba(247, 205, 106, 0.25));
+}
+
+.pile-row {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: end;
+  justify-content: center;
+  gap: clamp(1.05rem, 2.2vw, 1.7rem);
 }
 
 .deck-cluster {
@@ -172,9 +178,10 @@ const headline = computed(() => {
 @media (max-width: 960px) {
   .center-pile {
     top: 49%;
-    width: min(35vw, 16rem);
-    min-width: 10.5rem;
-    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pile-row {
+    gap: clamp(0.75rem, 2vw, 1.1rem);
   }
 }
 </style>

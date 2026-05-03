@@ -4,18 +4,18 @@
       <span>{{ portraitText }}</span>
       <i v-if="isDealer">庄</i>
     </div>
+    <div class="hand-count">
+      <div class="backs">
+        <FourColorCard v-for="index in backCount" :key="index" back size="tiny" />
+      </div>
+      <b>{{ handCount }}</b>
+    </div>
     <div class="seat-panel">
       <header>
         <strong>{{ displayName }}</strong>
         <span v-if="player.isBot">BOT</span>
         <span v-else-if="!player.connected">托管</span>
       </header>
-      <div class="hand-count">
-        <div class="backs">
-          <FourColorCard v-for="index in backCount" :key="index" back size="tiny" />
-        </div>
-        <b>{{ handCount }}</b>
-      </div>
       <div class="meld-row" :class="{ empty: !groups.length }">
         <template v-if="groups.length">
           <div v-for="group in groups" :key="group.id" class="meld" :class="group.tone">
@@ -61,6 +61,7 @@ const avatarTone = computed(() => {
 
 <style scoped>
 .player-seat {
+  --opponent-avatar-w: clamp(6.4rem, min(10vw, 18vh), 9.2rem);
   position: absolute;
   z-index: 5;
   display: grid;
@@ -73,31 +74,31 @@ const avatarTone = computed(() => {
   top: 2.1vh;
   left: 50%;
   transform: translateX(-50%);
-  grid-template-columns: auto minmax(18rem, 28rem);
-  justify-items: start;
-  gap: 0.9rem;
+  width: 100%;
+  grid-template-columns: auto;
+  justify-items: center;
+  gap: 0;
+  pointer-events: none;
 }
 
 .left {
-  left: 3vw;
-  top: 36%;
+  left: clamp(0.7rem, 1.4vw, 1.6rem);
+  top: 37%;
+  width: var(--opponent-avatar-w);
   transform: translateY(-50%);
-  grid-template-columns: auto minmax(15rem, 23rem);
+  grid-template-columns: var(--opponent-avatar-w);
   justify-items: center;
-  gap: 0.5rem;
+  gap: 0;
 }
 
 .right {
-  right: 3vw;
-  top: 36%;
+  right: clamp(0.7rem, 1.4vw, 1.6rem);
+  top: 37%;
+  width: var(--opponent-avatar-w);
   transform: translateY(-50%);
-  grid-template-columns: minmax(15rem, 23rem) auto;
+  grid-template-columns: var(--opponent-avatar-w);
   justify-items: center;
-  gap: 0.5rem;
-}
-
-.right .portrait {
-  order: 2;
+  gap: 0;
 }
 
 .portrait {
@@ -113,7 +114,7 @@ const avatarTone = computed(() => {
     radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.7), transparent 19%),
     linear-gradient(180deg, #f4ead6, #d5b98c);
   box-shadow: 0 0.5rem 0 #3c2c1b, 0 0.9rem 1.4rem rgba(0, 0, 0, 0.38);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .portrait::before {
@@ -127,15 +128,20 @@ const avatarTone = computed(() => {
 
 .portrait span {
   position: absolute;
-  left: 0;
-  right: 0;
+  left: -0.35rem;
+  right: -0.35rem;
   bottom: 0;
-  min-height: 1.7rem;
+  min-height: 2.1rem;
   display: grid;
   place-items: center;
+  border: 2px solid rgba(23, 19, 15, 0.55);
+  border-bottom: 0;
+  border-radius: 0 0 0.38rem 0.38rem;
   border-top: 2px solid rgba(23, 19, 15, 0.55);
   background: rgba(255, 246, 226, 0.92);
   font-weight: 900;
+  line-height: 1;
+  overflow: visible;
 }
 
 .portrait i {
@@ -166,17 +172,54 @@ const avatarTone = computed(() => {
   background: #263850;
 }
 
+.top .portrait,
 .left .portrait,
 .right .portrait {
-  width: clamp(7.6rem, 14vw, 11.6rem);
+  width: var(--opponent-avatar-w);
 }
 
+.top .portrait {
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.top .seat-panel {
+  position: absolute;
+  left: calc(50% + var(--opponent-avatar-w) / 2 + clamp(0.5rem, 1vw, 0.9rem));
+  top: calc(var(--opponent-avatar-w) * 0.58);
+  width: clamp(9.5rem, 17vw, 15.5rem);
+  max-height: clamp(5.2rem, 21vh, 9.2rem);
+  overflow: auto;
+  pointer-events: auto;
+  scrollbar-width: none;
+}
+
+.left .seat-panel {
+  position: absolute;
+  left: calc(var(--opponent-avatar-w) * 0.72);
+  top: calc(var(--opponent-avatar-w) * 0.62);
+  z-index: 3;
+  width: max-content;
+  max-width: min(45vw, 32rem);
+}
+
+.right .seat-panel {
+  position: absolute;
+  right: calc(var(--opponent-avatar-w) * 0.72);
+  top: calc(var(--opponent-avatar-w) * 0.62);
+  z-index: 3;
+  width: max-content;
+  max-width: min(45vw, 32rem);
+}
+
+.top .portrait::before,
 .left .portrait::before,
 .right .portrait::before {
   inset: 0.8rem 1rem 2.75rem;
   box-shadow: 0 2.15rem 0 0 #f1c7a8;
 }
 
+.top .portrait span,
 .left .portrait span,
 .right .portrait span {
   min-height: 2.25rem;
@@ -197,12 +240,17 @@ const avatarTone = computed(() => {
 .top .seat-panel,
 .left .seat-panel,
 .right .seat-panel {
-  width: 100%;
   padding: 0;
   border: 0;
   border-radius: 0;
   background: transparent;
   box-shadow: none;
+}
+
+.top .seat-panel {
+  width: clamp(9.5rem, 17vw, 15.5rem);
+  max-height: none;
+  overflow: visible;
 }
 
 header {
@@ -237,6 +285,9 @@ header span {
 }
 
 .hand-count {
+  position: relative;
+  z-index: 4;
+  width: max-content;
   display: flex;
   align-items: end;
   gap: 0.45rem;
@@ -246,13 +297,31 @@ header span {
 .top .hand-count,
 .left .hand-count,
 .right .hand-count {
+  position: absolute;
+  width: max-content;
   justify-content: flex-start;
   margin-top: 0.2rem;
   gap: 0.38rem;
 }
 
+.top .hand-count {
+  left: calc(50% + var(--opponent-avatar-w) / 2 + clamp(0.55rem, 1vw, 0.9rem));
+  top: calc(var(--opponent-avatar-w) * 0.08);
+  margin-left: 0;
+}
+
+.left .hand-count {
+  left: calc(var(--opponent-avatar-w) * 0.8);
+  top: calc(var(--opponent-avatar-w) * 0.28);
+  margin-left: 0;
+}
+
 .right .hand-count {
-  justify-content: flex-end;
+  right: calc(var(--opponent-avatar-w) * 0.8);
+  top: calc(var(--opponent-avatar-w) * 0.28);
+  margin-left: 0;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
 }
 
 .backs {
@@ -272,19 +341,22 @@ header span {
 .hand-count b {
   min-width: 2.1rem;
   min-height: 1.7rem;
-  border: 2px solid #2b251f;
-  border-radius: 0.35rem;
+  border: 0;
+  border-radius: 0;
   display: grid;
   place-items: center;
-  background: #f8efe0;
-  color: #271d14;
+  background: transparent;
+  color: #f7ead5;
   font-size: 1.1rem;
+  text-shadow:
+    0 2px 0 #17120d,
+    0 0 0.4rem rgba(0, 0, 0, 0.82);
 }
 
 .top .hand-count b,
 .left .hand-count b,
 .right .hand-count b {
-  background: #f4ebdc;
+  background: transparent;
 }
 
 .meld-row {
@@ -306,13 +378,19 @@ header span {
   justify-content: flex-start;
   align-content: flex-start;
   min-height: 0;
-  max-width: 100%;
+  max-width: min(45vw, 32rem);
   margin-top: 0.42rem;
   overflow: visible;
 }
 
 .right .meld-row {
   justify-content: flex-end;
+}
+
+.top .meld-row,
+.left .meld-row,
+.right .meld-row {
+  gap: 0.28rem;
 }
 
 .meld {
@@ -356,17 +434,29 @@ header span {
 
 @media (max-width: 960px) {
   .player-seat {
+    --opponent-avatar-w: clamp(5.8rem, min(12vw, 18vh), 7.5rem);
+  }
+
+  .player-seat {
     grid-template-columns: auto minmax(7rem, 12rem);
   }
 
   .top,
   .left,
   .right {
-    grid-template-columns: auto minmax(10rem, 1fr);
+    grid-template-columns: var(--opponent-avatar-w);
+  }
+
+  .top {
+    grid-template-columns: auto;
+  }
+
+  .left {
+    grid-template-columns: var(--opponent-avatar-w);
   }
 
   .right {
-    grid-template-columns: minmax(10rem, 1fr) auto;
+    grid-template-columns: var(--opponent-avatar-w);
   }
 
   .top {
@@ -375,12 +465,33 @@ header span {
 
   .left,
   .right {
-    top: 34%;
+    top: 36%;
+    width: var(--opponent-avatar-w);
   }
 
+  .top .portrait,
   .left .portrait,
   .right .portrait {
-    width: clamp(6.2rem, 15vw, 8rem);
+    width: var(--opponent-avatar-w);
+  }
+
+  .top .seat-panel {
+    left: calc(50% + var(--opponent-avatar-w) / 2 + 0.45rem);
+    width: clamp(8.5rem, 19vw, 12rem);
+    top: calc(var(--opponent-avatar-w) * 0.6);
+    max-height: none;
+  }
+
+  .left .seat-panel {
+    left: calc(var(--opponent-avatar-w) * 0.74);
+    top: calc(var(--opponent-avatar-w) * 0.62);
+    max-width: min(45vw, 24rem);
+  }
+
+  .right .seat-panel {
+    right: calc(var(--opponent-avatar-w) * 0.74);
+    top: calc(var(--opponent-avatar-w) * 0.62);
+    max-width: min(45vw, 24rem);
   }
 
   .seat-panel {
