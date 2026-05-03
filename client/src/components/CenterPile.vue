@@ -1,5 +1,9 @@
 <template>
   <section class="center-pile" :class="{ active: isActive }">
+    <div class="turn-copy">
+      <strong>{{ headline }}</strong>
+      <span>{{ turnHint }}</span>
+    </div>
     <div class="pile-row">
       <div class="deck-cluster" :title="`牌堆剩余 ${deckCount} 张`">
         <div class="deck-backs">
@@ -12,10 +16,6 @@
         <FourColorCard v-if="responseCard" :card="responseCard" size="xl" stretched-face />
         <div v-else class="empty-card">待</div>
       </div>
-    </div>
-    <div class="turn-copy">
-      <strong>{{ headline }}</strong>
-      <span>{{ turnHint }}</span>
     </div>
   </section>
 </template>
@@ -163,9 +163,10 @@ const headline = computed(() => {
 .turn-copy {
   min-width: 0;
   display: grid;
-  gap: 0.12rem;
+  gap: 0.08rem;
   justify-items: center;
   text-align: center;
+  margin-bottom: 0.12rem;
 }
 
 .turn-copy strong {

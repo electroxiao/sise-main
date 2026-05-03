@@ -156,12 +156,13 @@ function onClick(item: PanelAction): void {
 <style scoped>
 .action-dock {
   pointer-events: auto;
+  min-width: clamp(5.7rem, 8vw, 7.4rem);
   display: flex;
   justify-content: center;
   gap: clamp(0.45rem, 1vw, 0.8rem);
-  padding: clamp(0.35rem, 0.8vh, 0.55rem);
+  padding: clamp(0.55rem, 1.15vh, 0.8rem) clamp(0.7rem, 1.5vw, 1.05rem);
   border: 2px solid rgba(20, 18, 15, 0.84);
-  border-radius: 999px;
+  border-radius: 0.82rem;
   background:
     linear-gradient(180deg, rgba(255, 246, 224, 0.9), rgba(179, 165, 139, 0.86)),
     repeating-linear-gradient(90deg, rgba(30, 25, 18, 0.08) 0 3px, transparent 3px 9px);

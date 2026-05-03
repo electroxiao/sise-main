@@ -145,7 +145,7 @@ function fanGroupStyle(total: number): Record<string, string> {
   color: #21160f;
   background:
     linear-gradient(180deg, #f4ead6, #d5b98c);
-  box-shadow: 0 0.5rem 0 #3c2c1b, 0 0.9rem 1.4rem rgba(0, 0, 0, 0.38);
+  box-shadow: 0 0.9rem 1.4rem rgba(0, 0, 0, 0.38);
   overflow: visible;
 }
 
@@ -209,7 +209,7 @@ function fanGroupStyle(total: number): Record<string, string> {
 .top .seat-panel {
   position: absolute;
   left: calc(50% + var(--opponent-avatar-w) / 2 + clamp(0.5rem, 1vw, 0.9rem));
-  top: calc(var(--opponent-avatar-w) * 0.58);
+  top: calc(var(--opponent-avatar-w) * 0.08);
   width: clamp(9.5rem, 17vw, 15.5rem);
   max-height: clamp(5.2rem, 21vh, 9.2rem);
   overflow: auto;
@@ -327,9 +327,9 @@ header span {
 }
 
 .top .hand-count {
-  left: calc(50% + var(--opponent-avatar-w) / 2 + clamp(0.55rem, 1vw, 0.9rem));
+  right: calc(50% + var(--opponent-avatar-w) / 2 + clamp(0.55rem, 1vw, 0.9rem));
   top: calc(var(--opponent-avatar-w) * 0.08);
-  margin-left: 0;
+  margin-right: 0;
 }
 
 .left .hand-count {
@@ -400,7 +400,7 @@ header span {
   justify-content: flex-start;
   align-content: flex-start;
   min-height: 0;
-  margin-top: 0.42rem;
+  margin-top: 0;
   overflow: visible;
 }
 
@@ -420,7 +420,7 @@ header span {
 .top .meld-row,
 .left .meld-row,
 .right .meld-row {
-  gap: 0.56rem;
+  gap: 1.12rem;
 }
 
 .meld {
@@ -428,11 +428,9 @@ header span {
   width: var(--fan-width, 1.35rem);
   height: 3.55rem;
   flex: 0 0 auto;
-  padding: 0.3rem 0.26rem 0.18rem;
-  border-radius: 0.35rem;
-  background:
-    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.26), transparent 64%),
-    rgba(37, 31, 25, 0.08);
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .fan-card {
@@ -449,10 +447,16 @@ header span {
   transform-origin: 50% 100%;
 }
 
+.fan-card :deep(.fc-card.response) {
+  box-shadow:
+    0 0.32rem 0 rgba(20, 14, 10, 0.86),
+    0 0.55rem 1rem rgba(0, 0, 0, 0.34),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.28);
+}
+
 .active .portrait,
 .responder .portrait {
   box-shadow:
-    0 0.5rem 0 #3c2c1b,
     0 0.9rem 1.4rem rgba(0, 0, 0, 0.38),
     0 0 0 4px rgba(94, 211, 117, 0.72);
 }
@@ -507,7 +511,7 @@ header span {
   .top .seat-panel {
     left: calc(50% + var(--opponent-avatar-w) / 2 + 0.45rem);
     width: clamp(8.5rem, 19vw, 12rem);
-    top: calc(var(--opponent-avatar-w) * 0.6);
+    top: calc(var(--opponent-avatar-w) * 0.08);
     max-height: none;
   }
 

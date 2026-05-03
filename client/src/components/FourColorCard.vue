@@ -109,24 +109,25 @@ const colorClass = computed(() => `tone-${props.card?.color ?? "white"}`);
   line-height: 0.9;
   letter-spacing: 0;
   text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.55);
+  transform: scaleX(0.9) scaleY(1.1);
 }
 
 .top {
   align-self: center;
-  transform: translateY(-0.22em);
+  transform: translateY(-0.1em) scaleX(0.9) scaleY(1.1);
 }
 
 .bottom {
   align-self: center;
-  transform: translateY(0.22em) rotate(180deg);
+  transform: translateY(0.1em) rotate(180deg) scaleX(0.9) scaleY(1.1);
 }
 
 .stretched-face .top {
-  transform: translateY(-0.22em) scaleY(1.25);
+  transform: translateY(-0.1em) scaleX(0.9) scaleY(1.38);
 }
 
 .stretched-face .bottom {
-  transform: translateY(0.22em) rotate(180deg) scaleY(1.25);
+  transform: translateY(0.1em) rotate(180deg) scaleX(0.9) scaleY(1.38);
 }
 
 .tone-red {

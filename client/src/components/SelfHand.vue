@@ -177,12 +177,12 @@ function fanGroupStyle(total: number): Record<string, string> {
   min-height: 3.8rem;
   display: flex;
   align-items: end;
-  gap: 1rem;
-  padding: 0.18rem 0.65rem;
+  gap: 2rem;
+  padding: 0.2rem 0.65rem 0.24rem 1.35rem;
   border: 0;
   border-radius: 0;
   background: transparent;
-  overflow-x: auto;
+  overflow: visible;
 }
 
 .self-melds.empty {
@@ -195,10 +195,8 @@ function fanGroupStyle(total: number): Record<string, string> {
   width: var(--fan-width, 1.65rem);
   height: 4.25rem;
   padding: 0.34rem 0.36rem 0.2rem;
-  border-radius: 0.42rem;
-  background:
-    radial-gradient(ellipse at 50% 100%, rgba(0, 0, 0, 0.28), transparent 64%),
-    rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+  background: transparent;
 }
 
 .fan-card {
@@ -213,6 +211,13 @@ function fanGroupStyle(total: number): Record<string, string> {
 
 .fan-card :deep(.fc-card) {
   transform-origin: 50% 100%;
+}
+
+.fan-card :deep(.fc-card.response) {
+  box-shadow:
+    0 0.32rem 0 rgba(20, 14, 10, 0.86),
+    0 0.55rem 1rem rgba(0, 0, 0, 0.34),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.28);
 }
 
 .candidate-badge {
@@ -239,8 +244,7 @@ function fanGroupStyle(total: number): Record<string, string> {
   border: 2px solid rgba(20, 18, 15, 0.72);
   border-radius: 0.75rem;
   background:
-    linear-gradient(180deg, rgba(52, 55, 51, 0.72), rgba(25, 26, 24, 0.82)),
-    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 2px, transparent 2px 7px);
+    linear-gradient(180deg, rgba(52, 55, 51, 0.72), rgba(25, 26, 24, 0.82));
   overflow-x: auto;
   box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.04), 0 0.7rem 1.3rem rgba(0, 0, 0, 0.25);
 }
@@ -269,7 +273,7 @@ function fanGroupStyle(total: number): Record<string, string> {
 
   .self-melds {
     min-height: 3.2rem;
-    padding: 0.32rem;
+    padding: 0.32rem 0.32rem 0.32rem 1.1rem;
   }
 
   .hand-row {

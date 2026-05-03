@@ -254,8 +254,7 @@ function isCollectiveResponder(playerId: string): boolean {
   z-index: 0;
   background:
     radial-gradient(circle at 15% 20%, rgba(101, 82, 61, 0.48), transparent 22%),
-    radial-gradient(circle at 84% 24%, rgba(81, 96, 58, 0.34), transparent 21%),
-    repeating-radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.035) 0 1px, transparent 1px 5px);
+    radial-gradient(circle at 84% 24%, rgba(81, 96, 58, 0.34), transparent 21%);
   filter: contrast(1.08);
 }
 
@@ -304,7 +303,6 @@ function isCollectiveResponder(playerId: string): boolean {
   inset: 0;
   z-index: 0;
   background:
-    repeating-linear-gradient(95deg, rgba(255, 255, 255, 0.03) 0 2px, transparent 2px 12px),
     radial-gradient(circle at 38% 54%, rgba(255, 255, 255, 0.08), transparent 5%),
     radial-gradient(circle at 63% 42%, rgba(255, 255, 255, 0.07), transparent 6%),
     radial-gradient(circle at 28% 72%, rgba(255, 255, 255, 0.06), transparent 5%);
